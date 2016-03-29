@@ -13,8 +13,8 @@
 #       -window_width  -- width of the census window in pixels
 #       -max_disparity -- maximum value for the census disparity
 #       -disparity_scale -- how much to scale the disparity by when saving
-#   Currently, the window size is fixed at 19x19, the max disparity is 20, and
-#   the disparity scale is 50.
+#   Currently, the window size is fixed at 19x19, the max disparity is 100, and
+#   the disparity scale is 2.
 #
 # (c) 2016 Stephen Longfield, Jr.
 
@@ -62,11 +62,13 @@ def write_image(img, file_name):
 
     # Convert from row-major to column-major
     img_column = np.transpose(img, (1, 0))
-    img_scaled = img_column * 50
+    img_scaled = img_column * 2
 
     im = Image.fromarray(img_scaled)
 
-    im.save(file_name)
+    im_grey = im.convert(mode='L')
+
+    im_grey.save(file_name)
 
 
 def census_signature_one(array):
@@ -165,10 +167,10 @@ def stereo_census(left_img, right_img):
     left_shape = np.shape(left_census)
     stereo = np.zeros((left_shape[0], left_shape[1]))
     for y in range(np.shape(stereo)[1]):
-        print("Processing line %d of %d"%(y, np.shape(stereo)[1]), end='\r')
+        print("Processing line %d of %d" % (y, np.shape(stereo)[1]), end='\r')
         for x in range(np.shape(stereo)[0]):
             stereo[x, y] = min_hamming_index(left_census[x, y],
-                                             right_census[x:x + 20, y])
+                                             right_census[x:x + 100, y])
     return stereo
 
 
