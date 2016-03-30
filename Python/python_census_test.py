@@ -17,15 +17,14 @@ def test_hamming_distance_same_length(census_obj):
 
 
 def test_min_hamming_distance(census_obj):
-    a = np.array([True, False, False, False])
+    census_obj.left_census = np.array([[[True, False, False, False]]])
 
-    a_dist1 = np.array([True, False, True, False])
-    a_dist2 = np.array([True, False, True, True])
-    a_dist2b = np.array([False, False, True, False])
-    a_dist3 = np.array([True, True, True, True])
+    census_obj.right_census = ([[[False, False, True, False]],
+                                [[True, False, True, True]],
+                                [[True, False, True, False]],
+                                [[True, True, True, True]]])
 
-    min_index = census_obj.min_hamming_index(a, [a_dist2, a_dist2b, a_dist1,
-                                                 a_dist3])
+    min_index = census_obj.min_hamming_index(0, 0, 4)
 
     assert min_index == 2
 
@@ -57,16 +56,16 @@ def test_census_signature(census_obj):
 
 
 def test_stereo_census(census_obj):
-    left = np.zeros((38, 19))
-    right = np.zeros((38, 19))
+    census_obj.left_img = np.zeros((38, 19))
+    census_obj.right_img = np.zeros((38, 19))
 
     # Deterministic random feature to search for
     np.random.seed(12345)
     feature = np.random.rand(19, 19)
 
-    left[0:19, 0:19] = feature
-    right[10:29, 0:19] = feature
+    census_obj.left_img[0:19, 0:19] = feature
+    census_obj.right_img[10:29, 0:19] = feature
 
-    stereo = census_obj.stereo_census(left, right)
+    census_obj.stereo_census()
 
-    assert stereo[0, 0] == 10
+    assert census_obj.disparities[0, 0] == 10

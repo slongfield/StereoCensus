@@ -30,6 +30,10 @@ usage = 'python --left=img_L.png --right=img_R.png -out=out.png'
 class StereoCensus(object):
     """Computes the census transform algorithm for stereo vision."""
 
+    def __init__(self):
+        self.left_img = None
+        self.right_img = None
+
     def load_image_greyscale(self, file_name):
         """Load an image from a file
 
@@ -52,8 +56,24 @@ class StereoCensus(object):
         # Convert from column-major to row-major
         return np.transpose(im_array, (1, 0))
 
-    def write_image(self, img, file_name):
-        """Write an image out to a file.
+    def load_images(self, left_file, right_file):
+        """Loads images from files.
+
+        Args:
+            left_file: File to load the left image from
+            right_file: File to load the right image from
+
+        raises:
+            IOError: if the files cannot be opened
+            ValueError: if the images are not the same size
+        """
+        self.left_img = self.load_image_greyscale(left_file)
+        self.right_img = self.load_image_greyscale(right_file)
+        if np.shape(self.left_img) != np.shape(self.right_img):
+            raise ValueError("Image dimensions must be equal")
+
+    def write_image(self, file_name):
+        """Write the computed disparities out to a file.
 
         args:
             img: a 2d numpy array 
@@ -63,7 +83,7 @@ class StereoCensus(object):
         """
 
         # Convert from row-major to column-major
-        img_column = np.transpose(img, (1, 0))
+        img_column = np.transpose(self.disparities, (1, 0))
         img_scaled = img_column * 2
 
         im = Image.fromarray(img_scaled)
@@ -121,56 +141,53 @@ class StereoCensus(object):
 
     def hamming_distance(self, a, b):
         """Compute the Hamming distance between two np.arrays."""
-        return sum(np.not_equal(a, b))
+        return np.count_nonzero(a != b)
 
-    def min_hamming_index(self, ref, candidates):
+    def min_hamming_index(self, x, y, search_width):
         """Finds the index of the candidate list that has the minimum Hamming
         distance from the reference.
 
         args:
-            ref: reference census signature
-            candidates: 1d np.array of booleans
+            x: starting x coordinate
+            y: starting y coordinate
+            search_width: how far to the right to search
 
         returns:
             index: (int) index of the candidate with the minimum hamming distance
         """
-        min_val = self.hamming_distance(ref, candidates[0])
+        min_val = self.hamming_distance(self.left_census[x][y],
+                                        self.right_census[x][y])
         min_index = 0
-        for i, c in enumerate(candidates[1:]):
-            c_val = self.hamming_distance(ref, c)
+        max_x = np.shape(self.right_census)[0]
+        for i, x_check in enumerate(range(x + 1, x + search_width + 1)):
+            if x_check >= max_x:
+                break
+            c_val = self.hamming_distance(self.left_census[x][y],
+                                          self.right_census[x_check][y])
             if c_val < min_val:
                 min_val = c_val
                 min_index = i + 1
         return min_index
 
-    def stereo_census(self, left_img, right_img):
+    def stereo_census(self):
         """Compute the census stereo vision algorithm.
 
-        args:
-            left_img: a 2d np.array representing the left image
-            right_img: a 2d np.array representing the right image, with the same
-            dimensions as left_img.
+        Assumes that left_img and right_img have already been loaded.
 
         returns:
             stereo: a 2d np.array of the same dimentions as the input images.
-
-        raises:
-            ValueError: if the images are not the same size
         """
-        if np.shape(left_img) != np.shape(right_img):
-            raise ValueError("Image dimensions must be equal")
 
-        left_census = self.census_signature(left_img)
-        right_census = self.census_signature(right_img)
-        left_shape = np.shape(left_census)
-        stereo = np.zeros((left_shape[0], left_shape[1]))
-        for y in range(np.shape(stereo)[1]):
+        self.left_census = self.census_signature(self.left_img)
+        self.right_census = self.census_signature(self.right_img)
+
+        left_shape = np.shape(self.left_census)
+        self.disparities = np.zeros((left_shape[0], left_shape[1]))
+        for y in range(np.shape(self.disparities)[1]):
             print("Processing line %d of %d" %
-                  (y, np.shape(stereo)[1]), end='\r')
-            for x in range(np.shape(stereo)[0]):
-                stereo[x, y] = self.min_hamming_index(left_census[x, y],
-                                                      right_census[x:x + 100, y])
-        return stereo
+                  (y, np.shape(self.disparities)[1]), end='\r')
+            for x in range(np.shape(self.disparities)[0]):
+                self.disparities[x, y] = self.min_hamming_index(x, y, 100)
 
 
 def main(argv):
@@ -199,10 +216,9 @@ def main(argv):
 
     try:
         stereo = StereoCensus()
-        left_img = stereo.load_image_greyscale(left)
-        right_img = stereo.load_image_greyscale(right)
-        disparities = stereo.stereo_census(left_img, right_img)
-        stereo.write_image(disparities, out)
+        stereo.load_images(left, right)
+        stereo.stereo_census()
+        stereo.write_image(out)
     except IOError as e:
         print("Failed: %s: %s" % (e.strerror, e.filename))
     except ValueError as e:
