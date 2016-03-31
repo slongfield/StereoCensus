@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # python_census.py
 #
 # Implementation of the census transform stereo vision algorithm using Numpy.
@@ -30,9 +30,10 @@ usage = 'python --left=img_L.png --right=img_R.png -out=out.png'
 class StereoCensus(object):
     """Computes the census transform algorithm for stereo vision."""
 
-    def __init__(self):
+    def __init__(self, max_disparity=100):
         self.left_img = None
         self.right_img = None
+        self.max_disparity = max_disparity
 
     def load_image_greyscale(self, file_name):
         """Load an image from a file
@@ -187,16 +188,19 @@ class StereoCensus(object):
             print("Processing line %d of %d" %
                   (y, np.shape(self.disparities)[1]), end='\r')
             for x in range(np.shape(self.disparities)[0]):
-                self.disparities[x, y] = self.min_hamming_index(x, y, 100)
+                self.disparities[x, y] = self.min_hamming_index(x, y,
+                                                                self.max_disparity)
 
 
 def main(argv):
     left = None
     right = None
     out = None
+    max_disparity = 100
     try:
         opts, args = getopt.getopt(
-            argv, 'hl:r:o:', ['help', 'left=', 'right=', 'out='])
+            argv, 'hl:r:o:m:', ['help', 'left=', 'right=', 'out=',
+                                "max_disparity="])
     except getopt.GetoptError:
         print(usage)
         sys.exit(2)
@@ -210,12 +214,18 @@ def main(argv):
             right = arg
         elif opt in ('-o', '--out'):
             out = arg
+        elif opt in ('-m', '--max_disparity'):
+            if arg.isdigit():
+                max_disparity = int(arg)
+        else:
+            print(usage)
+            sys.exit(2)
     if left is None or right is None or out is None:
         print(usage)
         sys.exit(2)
 
     try:
-        stereo = StereoCensus()
+        stereo = StereoCensus(max_disparity=max_disparity)
         stereo.load_images(left, right)
         stereo.stereo_census()
         stereo.write_image(out)

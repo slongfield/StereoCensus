@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def census_obj():
-    return census.StereoCensus()
+    return census.StereoCensus(90)
 
 
 def test_hamming_distance_same_length(census_obj):
