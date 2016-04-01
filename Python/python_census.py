@@ -12,7 +12,6 @@
 #       -window_height -- height of the census window in pixels
 #       -window_width  -- width of the census window in pixels
 #       -max_disparity -- maximum value for the census disparity
-#       -disparity_scale -- how much to scale the disparity by when saving
 #   Currently, the window size is fixed at 19x19, the max disparity is 100, and
 #   the disparity scale is 2.
 #
@@ -30,10 +29,11 @@ usage = 'python --left=img_L.png --right=img_R.png -out=out.png'
 class StereoCensus(object):
     """Computes the census transform algorithm for stereo vision."""
 
-    def __init__(self, max_disparity=100):
+    def __init__(self, max_disparity=100, disparity_scale=2):
         self.left_img = None
         self.right_img = None
         self.max_disparity = max_disparity
+        self.disparity_scale = disparity_scale
 
     def load_image_greyscale(self, file_name):
         """Load an image from a file
@@ -85,7 +85,7 @@ class StereoCensus(object):
 
         # Convert from row-major to column-major
         img_column = np.transpose(self.disparities, (1, 0))
-        img_scaled = img_column * 2
+        img_scaled = img_column * self.disparity_scale
 
         im = Image.fromarray(img_scaled)
 
