@@ -1,4 +1,4 @@
-/*  Test framework for the line buffer.
+/*  Test for the census transform.
  * 
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
  * 
@@ -19,57 +19,56 @@
 
 #include <iostream>
 
-#include "Vline_buffer_test.h"
+#include "Vcensus_test.h"
 #include "verilated.h"
 
-int kWindowWidth = 10;
-int kLines = 10;
-int kLineWidth = 20;
+// Want Width*Height to be less than 32 for this test, so the output fits in a
+// single 32-bit integer.
+int kWidth = 5;
+int kHeight = 5;
 int kResetCycles = 3;
 
 int main(int argc, char **argv, char **env) {
   Verilated::commandArgs(argc, argv);
-  Vline_buffer_test* lb_dut = new Vline_buffer_test;
+  Vcensus_test* census_dut = new Vcensus_test;
   int tick = 0;
   int cycle = 0;
 
-  std::cout << "Testing line buffer..... ";
+  std::cout << "Testing census transformer..... ";
 
-  while(!Verilated::gotFinish() && cycle <= kLineWidth*kLines+kResetCycles) {
-    lb_dut->eval();
-    lb_dut->clk = tick%2 == 0;
+  while(!Verilated::gotFinish() && cycle <= kResetCycles+2) {
+    census_dut->eval();
+    census_dut->clk = tick%2 == 0;
     if (tick%2) cycle++;
     tick++;
+    if (!(tick%2 == 0)) continue;
 
     if ( cycle <= 1 ) {
-      lb_dut->rst = 1;
+      census_dut->rst = 1;
       continue;
     } else {
-      lb_dut->rst = 0;
+      census_dut->rst = 0;
     }
 
     if ( cycle <= kResetCycles ) {
-      lb_dut->inp = 0;
-      assert(lb_dut->outp[0] == 0);
+      for(int i = 0; i < kWidth*kHeight; i++) {
+        census_dut->inp[i] = 0;
+        assert(census_dut->outp == 0);
+      }
       continue;
     }
 
-    if ( cycle > kResetCycles ) {
-      lb_dut->inp = (cycle-kResetCycles);
-    } 
-    
-    int i = 0;
-    if ( cycle == kLineWidth*kLines+kResetCycles && tick%2==0 ) {
-      for (int line = 0; line < kLines; ++line) {
-        for (int col = 0; col < kWindowWidth; ++col) {
-          //std::cout << "l " << line << "c " << col << " " << lb_dut->outp[i] << "\n";
-          assert(lb_dut->outp[i] == (kLineWidth-kWindowWidth) + kLineWidth*line + col);
-          i++;
-        }
+    if (cycle == kResetCycles + 1) {
+      for(int i = 0; i < kWidth*kHeight; i++) {
+        census_dut->inp[i] = i;
       }
     }
 
-    
+    if(cycle == kResetCycles + 2) {
+      assert(census_dut->outp == (1<<(kWidth*kHeight/2))-1);
+    }
+
+
   }
   std::cout << "Test PASSED!\n";
   exit(0);

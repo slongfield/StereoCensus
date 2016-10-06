@@ -25,7 +25,8 @@
 `include "fifo.v"
 `include "tapped_fifo.v"
 
-// This line buffer 
+// This line buffer generates a "window" of pixels from an input stream, with no
+// flow control. It's parameterized in four ways:
 //   WIDTH:        Wordsize
 //   LINE_LENGTH:  Length of each line
 //   NUM_LINES:    How many lines to buffer
