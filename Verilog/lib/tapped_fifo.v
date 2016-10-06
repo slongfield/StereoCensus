@@ -17,6 +17,9 @@
  *
  */
 
+`ifndef LIB_TAPPED_FIFO_V_
+`define LIB_TAPPED_FIFO_V_
+
 `timescale 1ns/1ps
 
 `include "dff.v"
@@ -54,3 +57,5 @@ module tapped_fifo#(
 	endgenerate
 
 endmodule
+
+`endif // LIB_TAPPED_FIFO_V_

@@ -1,4 +1,4 @@
-/*  Concrete parameterizations of some FIFOs for testing.
+/*  Concrete parameterizations of a FIFOs for testing.
  * 
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
  * 

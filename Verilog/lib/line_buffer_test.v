@@ -1,4 +1,4 @@
-/*  Flip-flip FIFO.
+/*  Concrete parameterizations of a line buffer for testing.
  * 
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
  * 
@@ -17,38 +17,16 @@
  *
  */
 
-`ifndef LIB_FIFO_V_
-`define LIB_FIFO_V_
+`include "line_buffer.v"
 
-`timescale 1ns/1ps
-
-`include "dff.v"
-
-// This is a basic flip-flip FIFO with synchronous reset.
-module fifo#(
-	  parameter WIDTH=1,
-    parameter DEPTH=1
-  ) (
-	  input wire clk,
-	  input wire rst,
-
-	  input  wire [WIDTH-1:0] inp,
-	  output wire [WIDTH-1:0] outp
+module line_buffer_test(
+  input clk,
+  input rst,
+  input wire  [31:0] inp,
+  output wire [(32*10*10-1):0] outp
   );
 
-	reg [WIDTH-1:0] regs[DEPTH];
-
-	assign outp = regs[DEPTH-1];
-
-	dff#(WIDTH) sr0(clk, rst, inp, regs[0]);
-
-	genvar i;
-	generate
-		for (i = 0; i < DEPTH-1; i++) begin : shift
-			dff#(WIDTH) sr(clk, rst, regs[i], regs[i+1]);
-		end
-	endgenerate
+  line_buffer #(.WIDTH(32), .LINE_LENGTH(20), .NUM_LINES(10), .WINDOW_WIDTH(10))
+    lb(clk, rst, inp, outp);
 
 endmodule
-
-`endif // LIB_FIFO_V_

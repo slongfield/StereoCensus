@@ -17,6 +17,9 @@
  *
  */
 
+`ifndef LIB_DFF_V_
+`define LIB_DFF_V_
+
 `timescale 1ns/1ps
 
 // D flip-flop with synchronous reset
@@ -35,3 +38,5 @@ module dff#(
   end
 
 endmodule
+
+`endif // LIB_DFF_V_
