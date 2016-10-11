@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 
-TESTS = census_test
+TESTS = census_test pop_count_test
 
 check: $(TESTS)
 
@@ -12,6 +12,11 @@ census_test: census_test.v census_test.cpp
 	verilator $(VARGS) -cc census_test.v --exe census_test.cpp
 	make -j -f Vcensus_test.mk  -C $(OBJ_DIR)
 	$(OBJ_DIR)/Vcensus_test
+
+pop_count_test: pop_count_test.v pop_count_test.cpp
+	verilator $(VARGS) -cc pop_count_test.v --exe pop_count_test.cpp
+	make -j -f Vpop_count_test.mk  -C $(OBJ_DIR)
+	$(OBJ_DIR)/Vpop_count_test
 
 clean:
 	rm -rf $(OBJ_DIR)
