@@ -45,28 +45,17 @@ int main(int argc, char **argv, char **env) {
       argmin_dut->rst = 0;
     }
 
-
-    std::cout << "Input ";
-
     if (cycle > 3) {
       for (int i = 0; i < 10; i++) {
-        argmin_dut->inp[i] = (cycle+i)%12;
-        std::cout << " " << (cycle+i)%12 << " ";
+        argmin_dut->inp[i] = (cycle+i)%10;
       }
     }
-    std::cout << "\n";
 
-    std::cout << "Output_addr " << (argmin_dut->outp_addr==0) 
-                                << (argmin_dut->outp_addr==1)
-                                << (argmin_dut->outp_addr==2)
-                                << (argmin_dut->outp_addr==3)
-                                << (argmin_dut->outp_addr==4)
-                                << (argmin_dut->outp_addr==5)
-                                << (argmin_dut->outp_addr==6)
-                                << (argmin_dut->outp_addr==7)
-                                << (argmin_dut->outp_addr==8)
-                                << (argmin_dut->outp_addr==9) << "\n"; 
-
+    // After four cycles of information passing through, should see real data on
+    // the output. 
+    if (cycle > 7) {
+      assert(argmin_dut->outp_addr == (cycle+5) % 10);
+    }
   }
   std::cout << "Test PASSED!\n";
   exit(0);
