@@ -1,10 +1,10 @@
 # argmin_gen.py
-# 
+#
 # Takes in a single argument, the number of inputs, and generates a verilog
 # armin tree, using the argmin_helper.
-# 
+#
 # Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -54,10 +54,11 @@ _STAGE = """
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-        "--num_inputs", 
-        help="number of inputs in the generated argmin",
-        type=int,
-        required=True)
+    "--num_inputs",
+    help="number of inputs in the generated argmin",
+    type=int,
+    required=True)
+
 
 def get_args():
     """get_args parses the args with argparse.
@@ -67,6 +68,7 @@ def get_args():
     """
     args = parser.parse_args()
     return args.num_inputs
+
 
 def generate_argmin(num_inputs):
     """generate_argmin generates an argmin function
@@ -86,19 +88,19 @@ def generate_argmin(num_inputs):
     input_size = num_inputs
 
     while (input_size > 1):
-        output_size = input_size//2 + input_size%2
+        output_size = input_size // 2 + input_size % 2
 
         outp_name = "data_{}".format(stage)
         outp_addr = "addr_{}".format(stage)
 
         # Create some new output ports
-        lines.append("  wire [WIDTH*{}-1:0]      {};".format(output_size, 
-            outp_name))
+        lines.append("  wire [WIDTH*{}-1:0]      {};".format(output_size,
+                                                             outp_name))
         lines.append("  wire [ADDR_WIDTH*{}-1:0] {};".format(output_size,
-            outp_addr))
+                                                             outp_addr))
         lines.append(_STAGE.format(num_inp=input_size, num_outp=output_size,
-            stage=stage, inp=prev_output, inp_addr=prev_output_addr,
-            outp=outp_name, outp_addr=outp_addr))
+                                   stage=stage, inp=prev_output, inp_addr=prev_output_addr,
+                                   outp=outp_name, outp_addr=outp_addr))
 
         stage += 1
         input_size = output_size
@@ -111,6 +113,7 @@ def generate_argmin(num_inputs):
 
     lines.append(_FOOTER)
     return "\n".join(lines)
+
 
 def run():
     num_inputs = get_args()

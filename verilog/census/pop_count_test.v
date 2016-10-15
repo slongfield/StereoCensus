@@ -17,15 +17,15 @@
  *
  */
 
-`include "argmin.v"
+`include "pop_count_7.v"
 
 module pop_count_test(
   input clk,
   input rst,
-  input wire  [10*31:0] inp,
+  input wire  [31:0] inp,
   output wire [31:0] outp
   );
 
-  pop_count#(.WIDTH(32)) pc(clk, rst, inp, outp);
+  pop_count_7#(.WIDTH(32)) pc(clk, rst, inp, outp);
 
 endmodule
