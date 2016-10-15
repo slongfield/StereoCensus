@@ -1,4 +1,4 @@
-/*  Concrete parameterizations of population count for testing.
+/*  Concrete parameterizations of argmin for testing.
  * 
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
  * 
@@ -17,15 +17,16 @@
  *
  */
 
-`include "argmin.v"
+`include "argmin_10.v"
 
-module pop_count_test(
+module argmin_test(
   input clk,
   input rst,
-  input wire  [10*31:0] inp,
-  output wire [31:0] outp
+  input wire  [10*32-1:0] inp,
+  output wire [31:0] outp,
+  output wire [4:0] outp_addr
   );
 
-  pop_count#(.WIDTH(32)) pc(clk, rst, inp, outp);
+  argmin_10#(.WIDTH(32)) am(clk, rst, inp, outp, outp_addr);
 
 endmodule
