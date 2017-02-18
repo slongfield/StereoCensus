@@ -3,20 +3,25 @@ core without flow control, based on the census transform.
 
 Rough block diagram of the census transform stereo vision core:
 ```        
-           _____________     ___________________
-           |            |    |                  |
- Camera -> | Linebuffer | -> | census Transform |
-           |____________|    |__________________|   
-                                      |
-                              ________V_________    _______________
-                             |                  |   |              | 
-                             | Pouplation count |-->|    Argmin    |-> out
-                             |__________________|   |______________|
-                                      ^
-           _____________     _________|_________
-           |            |    |                  |
- Camera -> | Linebuffer | -> | census Transform |
-           |____________|    |__________________|   
+           _____________     ___________________   ______________
+           |            |    |                  |  |             |
+ Camera -> | Linebuffer | -> | Census Transform |->| Tapped FIFO |
+           |____________|    |__________________|  |_____________|
+                                                     ||||||||||||
+           _____________     ___________________    _VVVVVVVVVVVV_
+           |            |    |                  |  |              |
+ Camera -> | Linebuffer | -> | Census Transform |->|     XORs     |
+           |____________|    |__________________|  |______________|
+                                                          |
+                                                  ________V__________ 
+                                                 |                   |
+                                                 | Pouplation counts |
+                                                 |___________________| 
+                                                          |
+                                                    ______V________
+                                                    |              | 
+                                                    |    Argmin    |-> out
+                                                    |______________|
 ```
 
 The lib/ directory contains generic buffers, tapped fifos, and fifo elements, and
