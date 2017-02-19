@@ -24,7 +24,7 @@ module argmin_test(
   input rst,
   input wire  [10*32-1:0] inp,
   output wire [31:0] outp,
-  output wire [4:0] outp_addr
+  output wire [3:0] outp_addr
   );
 
   argmin_10#(.WIDTH(32)) am(clk, rst, inp, outp, outp_addr);

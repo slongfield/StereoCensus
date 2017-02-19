@@ -3,12 +3,12 @@ core without flow control, based on the census transform.
 
 Rough block diagram of the census transform stereo vision core:
 ```        
-           _____________     ___________________   ______________
+            ____________      __________________    _____________
            |            |    |                  |  |             |
  Camera -> | Linebuffer | -> | Census Transform |->| Tapped FIFO |
            |____________|    |__________________|  |_____________|
                                                      ||||||||||||
-           _____________     ___________________    _VVVVVVVVVVVV_
+            ____________      __________________    _VVVVVVVVVVVV_
            |            |    |                  |  |              |
  Camera -> | Linebuffer | -> | Census Transform |->|     XORs     |
            |____________|    |__________________|  |______________|

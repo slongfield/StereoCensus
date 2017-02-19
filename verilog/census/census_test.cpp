@@ -68,7 +68,6 @@ int main(int argc, char **argv, char **env) {
       assert(census_dut->outp == (1<<(kWidth*kHeight/2))-1);
     }
 
-
   }
   std::cout << "Test PASSED!\n";
   exit(0);

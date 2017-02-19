@@ -34,10 +34,10 @@ module argmin_{0}#(
     input wire [WIDTH*{0}-1:0] inp,
 
     output wire [WIDTH-1:0] outp,
-    output wire [$clog2({0}):0] outp_addr
+    output wire [$clog2({0})-1:0] outp_addr
   );
 
-  localparam ADDR_WIDTH = $clog2(WIDTH);
+  localparam ADDR_WIDTH = $clog2({0});
 """
 
 _FOOTER = """

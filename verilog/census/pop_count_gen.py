@@ -38,7 +38,7 @@ module pop_count_{0}#(
     input wire rst,
 
     input wire  [WIDTH-1:0] inp,
-    output wire [WIDTH-1:0] outp
+    output wire [$clog2(WIDTH)-1:0] outp
   );
 """
 
@@ -169,7 +169,9 @@ def generate_pop_count(width):
 
     # Output flop
     pop_count.append(
-        "  dff#(.WIDTH(WIDTH)) out_ff(clk, rst, x[$clog2(WIDTH)-1], outp);")
+        "  dff#(.WIDTH($clog2(WIDTH))) ")
+    pop_count.append(
+        "    out_ff(clk, rst, x[$clog2(WIDTH)-1][$clog2(WIDTH)-1:0], outp);")
 
     # Initial adder
     pop_count.append(

@@ -23,7 +23,7 @@ import sys
 
 from PIL import Image
 
-usage = 'python --left=img_L.png --right=img_R.png -out=out.png'
+usage = 'python_census.py --left=img_L.png --right=img_R.png -out=out.png'
 
 
 class StereoCensus(object):
