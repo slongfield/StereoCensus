@@ -46,10 +46,10 @@ module census_basic (
   wire [(8*20*20-1):0] left_window;
   wire [(8*20*20-1):0] right_window;
   
-  line_buffer#(.WIDTH(8), .LINE_LENGTH(640), .NUM_LINES(20), .WINDOW_WIDTH(20))
+  line_buffer#(.WIDTH(8), .LINE_LENGTH(450), .NUM_LINES(20), .WINDOW_WIDTH(20))
     left_buf(clk, rst, inp_left, left_window);
 
-  line_buffer#(.WIDTH(8), .LINE_LENGTH(640), .NUM_LINES(20), .WINDOW_WIDTH(20))
+  line_buffer#(.WIDTH(8), .LINE_LENGTH(450), .NUM_LINES(20), .WINDOW_WIDTH(20))
     right_buf(clk, rst, inp_right, right_window);
 
   wire [(20*20-1):0] left_census;
@@ -69,13 +69,13 @@ module census_basic (
 
   // Unpack the values of the census history.
   wire [20*20-1:0] left_unpacked[40];
- 	genvar i;
-	generate
-		for (i = 0; i < 40; i++) begin : unpack
+  genvar i;
+  generate
+    for (i = 0; i < 40; i++) begin : unpack
       assign left_unpacked[i] = 
         left_census_history[(20*20*(i+1)-1):(20*20*i)];
-		end
-	endgenerate
+    end
+  endgenerate
 
   // Compute the hamming distances.
   wire [8:0] hamming_distance[40];

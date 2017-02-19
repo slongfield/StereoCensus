@@ -22,7 +22,7 @@ basic_test: census_basic.v argmin_40.v pop_count_9.v basic_test.cpp
 	make -j -f Vcensus_basic.mk -C $(OBJ_DIR)
 	./to_dat.py ../data/cones/im2.png > $(GEN_DIR)/right
 	./to_dat.py ../data/cones/im6.png > $(GEN_DIR)/left
-	$(OBJ_DIR)/Vcensus_basic $(GEN_DIR)/left $(GEN_DIR)/right	> $(GEN_DIR)/out.data
+	$(OBJ_DIR)/Vcensus_basic $(GEN_DIR)/left $(GEN_DIR)/right	> $(GEN_DIR)/out.dat
 	./from_dat.py -w 450 -i $(GEN_DIR)/out.dat --scale=4 --offset=40 -o $(GEN_DIR)/basic.png
 
 census_gen.v: census_gen.py
