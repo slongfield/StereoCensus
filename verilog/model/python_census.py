@@ -124,9 +124,9 @@ class StereoCensus(object):
             img: 2d np.array of numbers
 
         returns:
-            census_img: 3d np.array, where the first two dimensions are equal equal
-            to the input img dimensions shrunk by the window size (19x19), and the
-            third dimension is 1 less that area.
+            census_img: 3d np.array, where the first two dimensions are equal
+            equal to the input img dimensions shrunk by the window size (19x19),
+            and the third dimension is 1 less that area.
         """
 
         (x_size, y_size) = np.shape(img)
