@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # census_gen.py
 #
 # From some command-line options generates a stereo vision census verilog
@@ -18,13 +19,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import argparse
+import getopt
 import math
 import sys
 
-
-def clog2(n):
-    int(math.ceil(math.log(n, 2)))
 
 # The header format string expects:
 #   bit_width:     the number of bits in the input stream
@@ -32,14 +30,15 @@ def clog2(n):
 #                  width)
 #   window_height: the window height
 #   window_width: the window width
+#   count_width: the width needed for the counter
 _HEADER = """
 `ifndef STEREO_CENSUS_V_
 `define STEREO_CENSUS_V_
 
 `include "line_buffer.v"
 `include "census.v"
-`include "pop_count_9.v" // Generated
-`include "argmin_40.v" // Generated
+`include "pop_count_{count_width}.v" // Generated
+`include "argmin_{max_disparity}.v" // Generated
 
 module stereo (
     input wire clk,
@@ -48,12 +47,12 @@ module stereo (
     input wire [{bit_width}-1:0] inp_left,
     input wire [{bit_width}-1:0] inp_right,
 
-    output wire [$clog2({max_disparity}-1:0] outp
+    output wire [$clog2({max_disparity})-1:0] outp
   );
 
-  localparam WIDTH {bit_width};
-  localparam WIN_WIDTH {window_width};
-  localparam WIN_HEIGHT {window_height};
+  localparam WIDTH = {bit_width};
+  localparam WIN_WIDTH = {window_width};
+  localparam WIN_HEIGHT = {window_height};
   localparam WIN_SIZE = {window_width}*{window_height};
   localparam DISPARITY = {max_disparity};
 """
@@ -66,7 +65,7 @@ _CENSUS = """
   wire [(WIDTH*WIN_SIZE-1):0] left_window;
   wire [(WIDTH*WIN_SIZE-1):0] right_window;
   
-  line_buffer#(.WIDTH(WIN_SIZE), .LINE_LENGTH({line_length}), 
+  line_buffer#(.WIDTH(WIDTH), .LINE_LENGTH({line_length}), 
                .NUM_LINES(WIN_HEIGHT), .WINDOW_WIDTH(WIN_WIDTH))
     left_buf(clk, rst, inp_left, left_window);
 
@@ -139,14 +138,48 @@ endmodule
 `endif // STEREO_CENSUS_V_"""
 
 
-def main(argv):
+usage = 'census_gen.py -b 8 -d 100 -h 20 -w 20 -l 450 -- Read the source.'
 
+
+def clog2(n):
+    return int(math.ceil(math.log(n, 2)))
+
+
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv,
+                                   "b:d:h:w:l:", ["bit_width=",
+                                                  "max_disparty=",
+                                                  "window_height=",
+                                                  "window_width=",
+                                                  "line_length="])
+    except getopt.GetoptError:
+        print(usage)
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ('-b', '--bit_width'):
+            bit_width = int(arg)
+        elif opt in ('-d', '--max_disparity'):
+            max_disparity = int(arg)
+        elif opt in ('-h', '--window_height'):
+            window_height = int(arg)
+        elif opt in ('-w', '--window_width'):
+            window_width = int(arg)
+        elif opt in ('-l', '--line_length'):
+            line_length = int(arg)
+        else:
+            print(usage)
+            sys.exit(2)
+
+    count_width = clog2(window_width * window_height)
     print(_HEADER.format(bit_width=bit_width, max_disparity=max_disparity,
-                         window_height=window_height, window_width=window_width))
+                         window_height=window_height, window_width=window_width,
+                         count_width=count_width))
     print(_CENSUS.format(line_length=line_length))
-    print(_HAMMING.format(count_width=clog2(window_width * window_height)))
-    print(_DISPARITY.format(count_width=clog2(window_width * window_height),
+    print(_HAMMING.format(count_width=count_width))
+    print(_DISPARITY.format(count_width=count_width,
                             max_disparity=max_disparity))
+    print(_FOOTER)
 
 if __name__ == '__main__':
     main(sys.argv[1:])

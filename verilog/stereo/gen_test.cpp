@@ -31,7 +31,7 @@
 #include <fstream>
 #include <cstdlib>
 
-#include "Vcensus_basic.h"
+#include "Vstereo.h"
 #include "verilated.h"
 
 void usage() {
