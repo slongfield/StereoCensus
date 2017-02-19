@@ -64,12 +64,12 @@ module stereo (
 _CENSUS = """
   wire [(WIDTH*WIN_SIZE-1):0] left_window;
   wire [(WIDTH*WIN_SIZE-1):0] right_window;
-  
-  line_buffer#(.WIDTH(WIDTH), .LINE_LENGTH({line_length}), 
+
+  line_buffer#(.WIDTH(WIDTH), .LINE_LENGTH({line_length}),
                .NUM_LINES(WIN_HEIGHT), .WINDOW_WIDTH(WIN_WIDTH))
     left_buf(clk, rst, inp_left, left_window);
 
-  line_buffer#(.WIDTH(WIDTH), .LINE_LENGTH({line_length}), 
+  line_buffer#(.WIDTH(WIDTH), .LINE_LENGTH({line_length}),
                .NUM_LINES(WIN_HEIGHT), .WINDOW_WIDTH(WIN_WIDTH))
     right_buf(clk, rst, inp_right, right_window);
 
@@ -78,14 +78,14 @@ _CENSUS = """
 
   census#(.WIDTH(WIDTH), .WINDOW_WIDTH(WIN_WIDTH), .WINDOW_HEIGHT(WIN_HEIGHT))
     lcensus(clk, rst, left_window, left_census);
- 
+
   census#(.WIDTH(WIDTH), .WINDOW_WIDTH(WIN_WIDTH), .WINDOW_HEIGHT(WIN_HEIGHT))
     rcensus(clk, rst, right_window, right_census);
 
   wire [(WIN_SIZE*DISPARITY-1):0] left_census_history;
   wire [WIN_SIZE-1:0] unused;
 
-  tapped_fifo#(.WIDTH(WIN_SIZE), .DEPTH(DISPARITY)) 
+  tapped_fifo#(.WIDTH(WIN_SIZE), .DEPTH(DISPARITY))
     census_samples(clk, rst, left_census, left_census_history, unused);
 
   // Unpack the values of the census history.
@@ -93,7 +93,7 @@ _CENSUS = """
   genvar i;
   generate
     for (i = 0; i < DISPARITY; i++) begin : unpack
-      assign left_unpacked[i] = 
+      assign left_unpacked[i] =
         left_census_history[(WIN_SIZE*(i+1)-1):(WIN_SIZE*i)];
     end
   endgenerate
@@ -107,7 +107,7 @@ _HAMMING = """
   wire [{count_width}-1:0] hamming_distance[DISPARITY];
   generate
     for (i = 0; i < DISPARITY; i++) begin: ham
-      pop_count_{count_width}#(.WIDTH(WIN_SIZE)) 
+      pop_count_{count_width}#(.WIDTH(WIN_SIZE))
         count(clk, rst, right_census ^ left_unpacked[i], hamming_distance[i]);
     end
   endgenerate
@@ -127,13 +127,13 @@ _HAMMING = """
 #  max_disparity
 _DISPARITY = """
   wire [{count_width}-1:0] unused_min;
-  argmin_{max_disparity}#(.WIDTH({count_width})) 
+  argmin_{max_disparity}#(.WIDTH({count_width}))
     amin(clk, rst, packed_ham, unused_min, outp);
 """
 
 # Footer ends the file.
 _FOOTER = """
-endmodule 
+endmodule
 
 `endif // STEREO_CENSUS_V_"""
 

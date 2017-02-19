@@ -1,7 +1,7 @@
 /*  Sanity test for the tapped FIFO.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -50,7 +50,7 @@ int main(int argc, char **argv, char **env) {
       assert(fifo_dut->outp == 0);
       continue;
     }
-    
+
     // On the 4th cycle, put in 1. Next few cycles, should see this shifting
     // over on the tap output.
     fifo_dut->inp = 0;
@@ -63,7 +63,7 @@ int main(int argc, char **argv, char **env) {
     } else {
       assert(fifo_dut->outp == 0);
     }
-  
+
     fifo_dut->eval();
   }
   std::cout << "Test PASSED!\n";

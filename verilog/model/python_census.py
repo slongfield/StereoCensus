@@ -38,7 +38,7 @@ class StereoCensus(object):
     def load_image_greyscale(self, file_name):
         """Load an image from a file
 
-        Uses PIL to load an image from a file, convert it to greyscale, and then 
+        Uses PIL to load an image from a file, convert it to greyscale, and then
         returns an 2d np array.
 
         args:
@@ -77,7 +77,7 @@ class StereoCensus(object):
         """Write the computed disparities out to a file.
 
         args:
-            img: a 2d numpy array 
+            img: a 2d numpy array
 
         raises:
             IOError: the file cannot be opened
@@ -105,7 +105,7 @@ class StereoCensus(object):
             array: NxM 2d np.array of numbers
 
         returns:
-            signature: NxM-1 long 1d np.array of Booleans 
+            signature: NxM-1 long 1d np.array of Booleans
         """
         center_pos = (np.shape(array)[0] // 2, np.shape(array)[1] // 2)
         center_val = array[center_pos[0], center_pos[1]]

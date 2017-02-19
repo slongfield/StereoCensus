@@ -1,7 +1,7 @@
 /*  Test for the argmin unit.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -52,7 +52,7 @@ int main(int argc, char **argv, char **env) {
     }
 
     // After four cycles of information passing through, should see real data on
-    // the output. 
+    // the output.
     if (cycle > 7) {
       assert(argmin_dut->outp_addr == (cycle+5) % 10);
     }

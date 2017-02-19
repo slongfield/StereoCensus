@@ -110,7 +110,7 @@ def generate_masks(width):
 def generate_adders(width):
     """Generates an adder tree.
 
-    Assumes that masks exist, where mask m{n} represents a bitmask that 
+    Assumes that masks exist, where mask m{n} represents a bitmask that
     exposes substrings of width 2^n.
 
     Args:

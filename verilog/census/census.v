@@ -1,7 +1,7 @@
 /*  Basic census transformation.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -51,7 +51,7 @@ module census#(
   localparam CENTER = (WINDOW_WIDTH*WINDOW_HEIGHT-1)/2;
 
   wire [WINDOW_WIDTH*WINDOW_HEIGHT-1:0] outp_next;
-  
+
   wire [WIDTH-1:0] word[WINDOW_WIDTH*WINDOW_HEIGHT];
 
   dff#(.WIDTH(WINDOW_WIDTH*WINDOW_HEIGHT)) out_ff(clk, rst, outp_next, outp);

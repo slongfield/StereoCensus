@@ -27,7 +27,7 @@ _HEADER = """
 
 module argmin_{0}#(
     parameter WIDTH=1
-  ) ( 
+  ) (
     input wire clk,
     input wire rst,
 
@@ -41,7 +41,7 @@ module argmin_{0}#(
 """
 
 _FOOTER = """
-endmodule 
+endmodule
 
 `endif // CENSUS_ARGMIN_V_
 """

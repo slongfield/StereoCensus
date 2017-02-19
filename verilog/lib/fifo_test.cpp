@@ -1,10 +1,10 @@
 /*  Simple sanity test for the FIFO.
- * 
- *  If this test doesn't pass, it means that something is wrong with your 
+ *
+ *  If this test doesn't pass, it means that something is wrong with your
  *  installation of Verilog, Cpp, or Make.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -53,8 +53,8 @@ int main(int argc, char **argv, char **env) {
       assert(fifo_dut->outp == 0);
       continue;
     }
-    
-    // On the 4th cycle, put in 4. Since the FIFO is 10 elements long, it 
+
+    // On the 4th cycle, put in 4. Since the FIFO is 10 elements long, it
     // should be visible on the output on the 14th cycle.
     fifo_dut->inp = 0;
     if (cycle == 4) {
@@ -64,7 +64,7 @@ int main(int argc, char **argv, char **env) {
     } else {
       assert(fifo_dut->outp == 0);
     }
-  
+
     fifo_dut->eval();
   }
   std::cout << "Test PASSED!\n";

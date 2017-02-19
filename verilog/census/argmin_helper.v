@@ -1,7 +1,7 @@
 /*  Argmin helper is the recursive step of the argmin function.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -28,7 +28,7 @@
 // to see if the left or right value is smaller, and then forwards along the
 // minimum value, along with the 'address' of the minimum for the section of the
 // list it's scanned so far. For instance, for a length-6 list:
-//         
+//
 //          Out
 //          _|_
 //        0/   \1
@@ -36,11 +36,11 @@
 //    0/     \1      \0
 //    X       X       X
 //  0/ \1   0/ \1   0/ \1
-//  0   1   2   3   4   5 
+//  0   1   2   3   4   5
 //
 // If element 3 is the minimum, then follow the path from the output back to
 // 3 to get the address, 011, or 3. Note that when a layer isn't a multiple of
-// two long, a pass-through stage is used. 
+// two long, a pass-through stage is used.
 module argmin_helper#(
     parameter WIDTH=1,
     parameter ADDR_WIDTH=1,
@@ -65,7 +65,7 @@ module argmin_helper#(
   wire [WIDTH-1:0] inp_word[NUM_INP];
   wire [ADDR_WIDTH-1:0] inp_addr_word[NUM_INP];
   genvar i;
-  generate 
+  generate
   for (i = 0; i < NUM_INP; i++) begin
     assign inp_word[i] = inp[(INP_WIDTH-WIDTH*i-1):(INP_WIDTH-WIDTH*(i+1))];
     assign inp_addr_word[i] = inp_addr[(INP_A_WIDTH-ADDR_WIDTH*i-1):
@@ -80,7 +80,7 @@ module argmin_helper#(
   wire [WIDTH-1:0] outp_word[NUM_OUTP];
   wire [ADDR_WIDTH-1:0] outp_addr_word[NUM_OUTP];
   genvar j;
-  generate 
+  generate
   for (j = 0; j < NUM_OUTP; j++) begin
     assign outp[(OUTP_WIDTH-WIDTH*j-1):(OUTP_WIDTH-WIDTH*(j+1))] = outp_word[j];
     assign outp_addr[(OUTP_A_WIDTH-ADDR_WIDTH*j-1):
@@ -101,7 +101,7 @@ module argmin_helper#(
     end else begin
       // Otherwise, generate an argmin_stage that reduces two inputs to a single
       // output.
-      argmin_stage#(.WIDTH(WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .STAGE(STAGE)) 
+      argmin_stage#(.WIDTH(WIDTH), .ADDR_WIDTH(ADDR_WIDTH), .STAGE(STAGE))
         as(clk, rst, inp_word[k], inp_addr_word[k], inp_word[k+1], inp_addr_word[k+1],
            outp_word[k/2], outp_addr_word[k/2]);
     end

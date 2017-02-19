@@ -1,7 +1,7 @@
 /*  Line buffer producing a window of inputs.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -38,7 +38,7 @@
 //
 // In essence, if + is a tapped buffer, and - is a plain FIFO, for a 5x5 window
 // with a line length of 20:
-// 
+//
 //               in>+++++>1
 // 1>---------------+++++>2
 // 2>---------------+++++>3
@@ -63,7 +63,7 @@ module line_buffer#(
   localparam TAP_WIDTH = WIDTH*WINDOW_WIDTH;
 
   wire[WIDTH*WINDOW_WIDTH-1:0] window_line[NUM_LINES];
- 
+
   wire[WIDTH-1:0] next_line[NUM_LINES];
 
   tapped_fifo#(.WIDTH(WIDTH), .DEPTH(WINDOW_WIDTH))
@@ -74,9 +74,9 @@ module line_buffer#(
   generate
   for (i = 1; i < NUM_LINES; i++) begin : lines
     wire[WIDTH-1:0] connection;
-    fifo#(.WIDTH(WIDTH), .DEPTH(LINE_LENGTH-WINDOW_WIDTH)) 
+    fifo#(.WIDTH(WIDTH), .DEPTH(LINE_LENGTH-WINDOW_WIDTH))
          f(clk, rst, next_line[i-1], connection);
-    tapped_fifo#(.WIDTH(WIDTH), .DEPTH(WINDOW_WIDTH)) 
+    tapped_fifo#(.WIDTH(WIDTH), .DEPTH(WINDOW_WIDTH))
          tf(clk, rst, connection, window_line[i], next_line[i]);
     assign outp[(OUT_WIDTH-TAP_WIDTH*(i)-1):(OUT_WIDTH-TAP_WIDTH*(i+1))] = window_line[i];
   end

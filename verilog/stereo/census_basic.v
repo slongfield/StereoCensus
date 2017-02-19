@@ -1,7 +1,7 @@
 /*  Static version of the census transform stereo vision algorithm.
- * 
+ *
  *  Copyright (c) 2016, Stephen Longfield, stephenlongfield.com
- * 
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -38,14 +38,14 @@ module census_basic (
   input wire rst,
 
   input wire [7:0] inp_left,
-  input wire [7:0] inp_right, 
+  input wire [7:0] inp_right,
 
   output wire [5:0] outp
 );
 
   wire [(8*20*20-1):0] left_window;
   wire [(8*20*20-1):0] right_window;
-  
+
   line_buffer#(.WIDTH(8), .LINE_LENGTH(450), .NUM_LINES(20), .WINDOW_WIDTH(20))
     left_buf(clk, rst, inp_left, left_window);
 
@@ -57,14 +57,14 @@ module census_basic (
 
   census#(.WIDTH(8), .WINDOW_WIDTH(20), .WINDOW_HEIGHT(20))
     lcensus(clk, rst, left_window, left_census);
- 
+
   census#(.WIDTH(8), .WINDOW_WIDTH(20), .WINDOW_HEIGHT(20))
     rcensus(clk, rst, right_window, right_census);
 
   wire [20*20*40-1:0] left_census_history;
   wire [20*20-1:0] unused;
 
-  tapped_fifo#(.WIDTH(20*20), .DEPTH(40)) 
+  tapped_fifo#(.WIDTH(20*20), .DEPTH(40))
     census_samples(clk, rst, left_census, left_census_history, unused);
 
   // Unpack the values of the census history.
@@ -72,7 +72,7 @@ module census_basic (
   genvar i;
   generate
     for (i = 0; i < 40; i++) begin : unpack
-      assign left_unpacked[i] = 
+      assign left_unpacked[i] =
         left_census_history[(20*20*(i+1)-1):(20*20*i)];
     end
   endgenerate
@@ -81,7 +81,7 @@ module census_basic (
   wire [8:0] hamming_distance[40];
   generate
     for (i = 0; i < 40; i++) begin: ham
-      pop_count_9#(.WIDTH(400)) 
+      pop_count_9#(.WIDTH(400))
         count(clk, rst, right_census ^ left_unpacked[i], hamming_distance[i]);
     end
   endgenerate
