@@ -18,8 +18,8 @@
  *
  *  This is the equivalent of running gen_stereo.py with:
  *    census_gen.py
- *      --bits_width 8
- *      --line_width 640
+ *      --bit_width 8
+ *      --line_width 450
  *      --window_width = 20
  *      --window_height = 20
  *      --max_disparity = 40

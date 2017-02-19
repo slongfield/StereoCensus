@@ -5,8 +5,8 @@
 #
 # (c) 2017 Stephen Longfield, Jr.
 
-usage = ('from_dat.py --width=640 --in=in.dat --out=out.png --scale=2' +'
-         --offset=40')
+usage = ('from_dat.py --width=640 --in=in.dat --out=out.png --scale=2' +
+         '--offset=40')
 
 import getopt
 import numpy as np

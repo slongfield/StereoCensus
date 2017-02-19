@@ -28,8 +28,5 @@ The lib/ directory contains generic buffers, tapped fifos, and fifo elements, an
 the census/ directory contains more specific processing elements, or generators
 for those elements, as needed.
 
-'make check_stereo' in this directory will generate a simple stereo vision census core,
-and test it agains the python golden reference model, using the test and
-generation utilities in the test/ directory. 
-
-'make check' will run the unit tests from each of the subdirectories.
+The stereo/ directory contains the generators and simple tests for the stereo
+vision core.
