@@ -26,7 +26,8 @@ module line_buffer_test(
   output wire [(32*10*10-1):0] outp
   );
 
-  line_buffer #(.WIDTH(32), .LINE_LENGTH(20), .NUM_LINES(10), .WINDOW_WIDTH(10))
+  line_buffer #(.WIDTH(32), .LINE_LENGTH(20), .NUM_LINES(10), 
+                .WINDOW_WIDTH(10))
     lb(clk, rst, inp, outp);
 
 endmodule

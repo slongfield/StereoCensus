@@ -62,8 +62,8 @@ int main(int argc, char **argv, char **env) {
     if ( cycle == kLineWidth*kLines+kResetCycles && tick%2==0 ) {
       for (int line = 0; line < kLines; ++line) {
         for (int col = 0; col < kWindowWidth; ++col) {
-          //std::cout << "l " << line << "c " << col << " " << lb_dut->outp[i] << "\n";
-          assert(lb_dut->outp[i] == (kLineWidth-kWindowWidth) + kLineWidth*line + col);
+          assert(lb_dut->outp[i] == (kLineWidth-kWindowWidth) + 
+                                     kLineWidth*line + col);
           i++;
         }
       }

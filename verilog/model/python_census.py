@@ -97,9 +97,9 @@ class StereoCensus(object):
         """Computes a single census signature.
 
         Takes in an NxM 2d np array, and compares each element in the array to
-        the central element, producing a list of Booleans--true when that element
-        is greater than the center pixel, false when it is smaller. This list does
-        not include the original center pixel.
+        the central element, producing a list of Booleans--true when that
+        element is greater than the center pixel, false when it is smaller. This
+        list does not include the original center pixel.
 
         args:
             array: NxM 2d np.array of numbers
@@ -154,7 +154,8 @@ class StereoCensus(object):
             search_width: how far to the right to search
 
         returns:
-            index: (int) index of the candidate with the minimum hamming distance
+            index: (int) index of the candidate with the minimum hamming
+              distance
         """
         min_val = self.hamming_distance(self.left_census[x][y],
                                         self.right_census[x][y])
@@ -188,8 +189,9 @@ class StereoCensus(object):
             print("Processing line %d of %d" %
                   (y, np.shape(self.disparities)[1]), end='\r')
             for x in range(np.shape(self.disparities)[0]):
-                self.disparities[x, y] = self.min_hamming_index(x, y,
-                                                                self.max_disparity)
+                self.disparities[x, y] = (
+                    self.min_hamming_index(x, y,
+                                           self.max_disparity))
 
 
 def main(argv):

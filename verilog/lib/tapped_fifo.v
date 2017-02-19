@@ -50,10 +50,11 @@ module tapped_fifo#(
 
     genvar i;
     generate
-        for (i = 0; i < DEPTH-1; i++) begin : shift
+      for (i = 0; i < DEPTH-1; i++) begin : shift
             dff#(WIDTH) sr(clk, rst, regs[i], regs[i+1]);
-      assign taps[((WIDTH*DEPTH-1)-(WIDTH*(i+1))):(WIDTH*(DEPTH-(i+2)))] = regs[i+1];
-        end
+      assign taps[((WIDTH*DEPTH-1)-(WIDTH*(i+1))):(WIDTH*(DEPTH-(i+2)))] = 
+        regs[i+1];
+      end
     endgenerate
 
 endmodule

@@ -99,7 +99,8 @@ def generate_argmin(num_inputs):
         lines.append("  wire [ADDR_WIDTH*{}-1:0] {};".format(output_size,
                                                              outp_addr))
         lines.append(_STAGE.format(num_inp=input_size, num_outp=output_size,
-                                   stage=stage, inp=prev_output, inp_addr=prev_output_addr,
+                                   stage=stage, inp=prev_output,
+                                   inp_addr=prev_output_addr,
                                    outp=outp_name, outp_addr=outp_addr))
 
         stage += 1

@@ -116,7 +116,8 @@ _HAMMING = """
   wire [({count_width}*DISPARITY-1):0] packed_ham;
   generate
     for (i = 0; i < DISPARITY; i++) begin: pack
-      assign packed_ham[({count_width}*(i+1)-1):({count_width}*i)] = hamming_distance[i];
+      assign packed_ham[({count_width}*(i+1)-1):({count_width}*i)] = 
+        hamming_distance[i];
     end
   endgenerate
 """

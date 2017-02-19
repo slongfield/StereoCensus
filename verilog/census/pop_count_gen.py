@@ -125,9 +125,11 @@ def generate_adders(width):
     #  1: index+1
     #  2: index+2
     #  3: 1 << (index+1)
+    # Start ignoring LineLengthBear
     _ADDER_FORMAT = """  if ($clog2(WIDTH) >= {2}) begin
     assign x[{1}] = (x[{0}] & m{1}[WIDTH-1:0]) + ((x[{0}] >> {3}) & m{1}[WIDTH-1:0]);
   end"""
+    # Stop ignoring
 
     adders = []
 

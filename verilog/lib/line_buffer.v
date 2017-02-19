@@ -78,7 +78,8 @@ module line_buffer#(
          f(clk, rst, next_line[i-1], connection);
     tapped_fifo#(.WIDTH(WIDTH), .DEPTH(WINDOW_WIDTH))
          tf(clk, rst, connection, window_line[i], next_line[i]);
-    assign outp[(OUT_WIDTH-TAP_WIDTH*(i)-1):(OUT_WIDTH-TAP_WIDTH*(i+1))] = window_line[i];
+    assign outp[(OUT_WIDTH-TAP_WIDTH*(i)-1):(OUT_WIDTH-TAP_WIDTH*(i+1))] = 
+      window_line[i];
   end
   endgenerate
 endmodule
