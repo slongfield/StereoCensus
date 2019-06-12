@@ -13,7 +13,6 @@ pushd lib
 make clean
 make check
 popd
-<<<<<<< HEAD
 # Test library of stereo-census related primitives.
 pushd census
 make clean
