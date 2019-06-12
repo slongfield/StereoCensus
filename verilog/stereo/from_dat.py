@@ -1,28 +1,23 @@
 #!/usr/bin/python3
-# from_dat.py
-#
-# This is the inverse of to_dat.py
-#
-# (c) 2017 Stephen Longfield, Jr.
+"""from_dat.py
 
-usage = ('from_dat.py --width=640 --in=in.dat --out=out.png --scale=2' +
-         '--offset=40')
+ This is the inverse of to_dat.py
 
-import getopt
-import numpy as np
-import sys
+ (c) 2019 Stephen Longfield, Jr."""
 
+import argparse
 from PIL import Image
 
 
 def dat_to_img(inp, width, outp, scale, offset):
+    """Transforms a dat file to image using PIL"""
     vals = []
     line_val = []
     if offset:
         line_val = [0] * offset
     count = offset
-    with open(inp) as f:
-        for line in f:
+    with open(inp) as dat_file:
+        for line in dat_file:
             line_val.append(int(line) * scale)
             count += 1
             if count == width:
@@ -30,41 +25,24 @@ def dat_to_img(inp, width, outp, scale, offset):
                 vals.append(line_val)
                 line_val = []
 
-    im = Image.new('L', (width, len(vals)), (255, 255, 255))
-    for y, line in enumerate(vals):
-        for x, pixel in enumerate(line):
-            im.putpixel((x, y), pixel)
-    im.save(outp)
+    img = Image.new('L', size=(width, len(vals)), color=255)
+    for row, line in enumerate(vals):
+        for col, pixel in enumerate(line):
+            img.putpixel((col, row), pixel)
+    img.save(outp)
 
 
-def main(argv):
-    scale = 1
-    offset = 0
-    try:
-        opts, args = getopt.getopt(
-            argv, 'hw:h:i:o:s:f:', ['help', 'width=', 'height=', 'in=',
-                                    'out=', 'scale=', 'offset='])
-    except getopt.GetoptError:
-        print(usage)
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt in ('-h', '--help'):
-            print(usage)
-            sys.exit(2)
-        elif opt in ('-w', '--width'):
-            width = int(arg)
-        elif opt in ('-i', '--in'):
-            inp = arg
-        elif opt in ('-o', '--out'):
-            outp = arg
-        elif opt in ('-s', '--scale'):
-            scale = int(arg)
-        elif opt in ('-f', '--offset'):
-            offset = int(arg)
-        else:
-            pring(usage)
-            sys.exit(2)
-    dat_to_img(inp, width, outp, scale, offset)
+def main():
+    """Main method."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-w", "--width", type=int, help="Expected width of the image")
+    parser.add_argument("-t", "--height", type=int, help="Expected height of the image")
+    parser.add_argument("-i", "--inp", type=str, help="Input file")
+    parser.add_argument("-o", "--outp", type=str, help="Output file")
+    parser.add_argument("-s", "--scale", type=int, help="Width scale", default=1)
+    parser.add_argument("-f", "--offset", type=int, help="Horizontal offset", default=0)
+    args = parser.parse_args()
+    dat_to_img(args.inp, args.width, args.outp, args.scale, args.offset)
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

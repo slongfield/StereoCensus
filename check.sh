@@ -1,28 +1,33 @@
 #!/bin/bash
 # check.sh
-# 
+#
 # Runs all of the tests.
 # Creates some example output in verilog/stereo/generated/gen.png
-
+set -e
 pushd verilog
-# Library of simple primitives.
+# Set up the Python environment.
+make venv
+. venv/bin/activate
+# Test library of simple primitives.
 pushd lib
 make clean
 make check
 popd
-# Library of stereo-census related primatives.
+<<<<<<< HEAD
+# Test library of stereo-census related primitives.
 pushd census
 make clean
 make check
 popd
-# Golden reference model.
+# Test golden reference model.
 pushd model
 py.test
 popd
-# Stereo vision core.
+# Test stereo vision core.
 pushd stereo
 make clean
 make check
 popd
+deactivate
+make clean
 popd
-

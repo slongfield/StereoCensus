@@ -2,6 +2,7 @@ import python_census as census
 
 import numpy as np
 import pytest
+import sys
 
 
 @pytest.fixture
@@ -50,7 +51,7 @@ def test_census_signature(census_obj):
         for y in range(2):
             signature_20_20[x][y] = np.array([a > 179 for a in range(360)])
 
-    np.set_printoptions(threshold=np.nan)
+    np.set_printoptions(threshold=sys.maxsize)
     sig = census_obj.census_signature(image_20_20_count)
     assert (sig == signature_20_20).all()
 
