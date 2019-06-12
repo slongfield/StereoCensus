@@ -14,4 +14,5 @@ Note that there are more errors around the edges of the image, where there's
 less to compare between the image pairs, as well as in areas where the image has
 fewer features.
 
-To reproduce, run ```make gen_test``` in the ```verilog/stereo``` directory. 
+To reproduce, run ```make venv``` in the ```verilog``` directory, followed by ```make gen_test``` in
+the ```verilog/stereo``` directory.
