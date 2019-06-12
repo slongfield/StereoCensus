@@ -16,7 +16,7 @@ census_test: census_test.v census_test.cpp
 
 pop_count_7.v: pop_count_gen.py
 	mkdir -p $(GEN_DIR)
-	python3 pop_count_gen.py --width=128 > $(GEN_DIR)/pop_count_7.v
+	../venv/bin/python3 pop_count_gen.py --width=128 > $(GEN_DIR)/pop_count_7.v
 
 pop_count_test: pop_count_test.v pop_count_test.cpp pop_count_7.v
 	verilator $(VARGS) -cc pop_count_test.v --exe pop_count_test.cpp
@@ -25,7 +25,7 @@ pop_count_test: pop_count_test.v pop_count_test.cpp pop_count_7.v
 
 argmin_10.v: argmin_helper.v argmin_stage.v argmin_gen.py
 	mkdir -p $(GEN_DIR)
-	python3 argmin_gen.py --num_inputs=10 > $(GEN_DIR)/argmin_10.v
+	../venv/bin/python3 argmin_gen.py --num_inputs=10 > $(GEN_DIR)/argmin_10.v
 
 argmin_test: argmin_10.v argmin_test.v argmin_test.cpp
 	verilator $(VARGS) -cc argmin_test.v --exe argmin_test.cpp
